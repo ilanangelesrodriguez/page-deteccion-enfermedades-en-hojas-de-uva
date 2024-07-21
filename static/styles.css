@@ -1,20 +1,159 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+* {
+    font-family: "Poppins", sans-serif !important;
+}
+
 body {
     font-family: "Poppins", sans-serif !important;
     background-color: #a4fdea !important;
+    min-height: 100vh;
+    margin: 0;
+}
+
+footer {
+  font-weight: 600;
+  background-color: #f1f1f1;
+  color: #333;
+  padding-top: 10px; 
+  padding-bottom: 10px;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  width: 100%; 
+  bottom: 0; 
+  font-size: 0.9em;
+}
+
+footer p {
+  margin: 0;
+  font-size: x-small;
+}
+
+
+.body__div {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    min-height: 90vh;
+    margin-top: 10vh;
+}
+
+.body__div-credits {
+  max-width: 95vw;
+  margin: auto !important;
+}
+
+
+.card {
+  width: 350px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  background-color: #fffffe;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+  
+}
+
+.card::before {
+  content: "";
+  width: 350px;
+  height: 120px;
+  position: absolute;
+  top: 0;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom: 3px solid #fefefe;
+  background: linear-gradient(40deg, rgb(158, 203, 221) 0%, rgb(29, 134, 253) 50%, rgb(156, 255, 143) 100%);
+  transition: all 0.5s ease;
+}
+
+.card * {
+  z-index: 1;
+}
+
+.image {
+  width: 100px;
+  height: 110px;
+  background-color: #1468BF;
+  border-radius: 50%;
+  border: 4px solid #fefefe;
+  margin-top: 30px;
+  transition: all 0.5s ease;
+}
+
+.card-info {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px;
+  transition: all 0.5s ease;
+}
+
+.card-info span {
+  font-weight: 600;
+  font-size: 24px;
+  color: #161A42;
+  margin-top: 15px;
+  line-height: 5px;
+}
+
+.card-info p {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.button {
+  text-decoration: none;
+  background-color: #1468BF;
+  color: white;
+  padding: 5px 20px;
+  border-radius: 5px;
+  border: 1px solid white;
+  transition: all 0.5s ease;
+}
+
+.card:hover::before {
+  width: 350px;
+  height: 310px;
+  border-bottom: none;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  transform: scale(0.95);
+}
+
+.card:hover .card-info {
+  transform: translate(0%,-3%);
+}
+
+.card:hover .image {
+  transform: scale(1.8) translate(0%,15%);
+  
+}
+
+.button:hover {
+  background-color: #44ffb7;
+  transform: scale(1.1);
+}
+
+
+.credits__description p {
+  text-align: justify;
 }
 
 .container {
     text-align: center;
     background: #fff;
     width: 95vw !important;
-    padding: 3em 1em;
+    padding: 2em 1em;
     border-radius: 8px;
     box-shadow: -9px 9px 18px #5a5a5a,
               9px -9px 18px #ffffff;
@@ -53,8 +192,9 @@ button:hover {
 }
 
 .form__div-tittle {
-    font-size: 1.8em;
+    font-size: 1.6em;
     font-weight: bolder;
+    text-align: center;
 }
 
 .form__result {
