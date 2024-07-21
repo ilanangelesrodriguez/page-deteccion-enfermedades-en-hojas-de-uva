@@ -44,8 +44,15 @@ def predict():
         else:
             prediction_label = "Etiqueta desconocida"
 
+        # Detalles adicionales de la predicción
+        prediction_confidence = np.max(prediction)  # Confianza de la predicción
+        prediction_probabilities = prediction[0]  # Probabilidades de todas las clases
 
-        return render_template('index.html', prediction=prediction_label)
+
+
+        return render_template('index.html', prediction=prediction_label, 
+                                confidence=prediction_confidence,
+                                probabilities=prediction_probabilities.tolist())
     return None
 
 

@@ -23,9 +23,22 @@
             </div>
             <button type="submit" class="btn btn-primary">Predecir</button>
         </form>
-        {% if prediction %}
-            <h2 class="mt-3 form__result">Predicción: {{ prediction }}</h2>
-        {% endif %}
+        
+            {% if prediction %}
+            <div class="mt-3 form__result">
+                Predicción:
+                <h2 class="mt-3">Predicción: {{ prediction }}</h2>
+                <p><strong>Confianza:</strong> {{ confidence | round(2) * 100 }}%</p>
+                <h3>Probabilidades por Clase:</h3>
+                <ul>
+                    {% for prob in probabilities %}
+                        <li>Clase {{ loop.index0 }}: {{ prob | round(4) * 100 }}%</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        
+        
     </div>
     
     <!-- Modal -->

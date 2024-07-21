@@ -58,8 +58,13 @@ button:hover {
 }
 
 .form__result {
-    font-size: 1.3em;
+    font-size: 1.2em !important;
     font-weight: 700;
+}
+
+.form__result-text {
+    font-weight: 500;
+    font-size: 1em
 }
 
 .input-div {
