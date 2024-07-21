@@ -5,17 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detección de enfermedades de la hoja de uva</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-    <h1>Detección de enfermedades de la hoja de uva</h1>
-    <form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" required>
-        <button type="submit">Predict</button>
-    </form>
-    {% if prediction %}
-        <h2>Prediction: {{ prediction }}</h2>
+    <div class="container">
+        <h1 class="form__div-tittle">Detección de enfermedades de la hoja de uva</h1>
+        <form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data" 
+        class="d-flex flex-column align-items-center " onsubmit="return validateFile()">
+            <div class="form__div mb-3 d-flex flex-column align-items-center mt-3">
+                <label for="file" class="form-label">Selecciona una imagen</label>
+
+                <div class="input-div">
+                    <input class="form-control input" name="file" type="file" id="file" required>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" stroke-linejoin="round" stroke-linecap="round" viewBox="0 0 24 24" stroke-width="2" fill="none" stroke="currentColor" class="icon"><polyline points="16 16 12 12 8 16"></polyline><line y2="21" x2="12" y1="12" x1="12"></line><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path><polyline points="16 16 12 12 8 16"></polyline></svg>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary">Predecir</button>
+        </form>
+        
+        {% if prediction %}
+        <div class="mt-3 form__result">
+            <div class="row">
+                <!-- Columna para la imagen original -->
+                <div class="col-md-4">
+                    <div class="mt-3 form__result">
+                        Imagen Original:
+                        <br>
+                        <img src="{{ url_for('static', filename='uploads/' + uploaded_image) }}" alt="Imagen Original" class="img-fluid form__result-img">
+                    </div>
+                </div>
+
+                <!-- Columna para la predicción y confianza -->
+                <div class="col-md-4">
+                    <div class="mt-3 form__result">
+                        Predicción:
+                        <h2 class="mb-3 form__result-text">{{ prediction }}</h2>
+                    </div>
+                    <div class="mt-3 form__result">
+                        Confianza:
+                        <h2 class="mb-3 form__result-text">{{ confidence | round(2) * 100 }}%</h2>
+                    </div>
+                </div>
+
+                <!-- Columna para la predicción y confianza -->
+                <div class="col-md-4">
+                    <div class="mt-3 form__result">
+                        Probabilidades por Clase:
+                        <ul class="mb-3 form__result-ul form__result-text">
+                            {% for prob in probabilities %}
+                                <li>Clase {{ loop.index0 }}: {{ prob | round(4) * 100 }}%</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     {% endif %}
-</div>
+        
+        
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="fileErrorModal" tabindex="-1" aria-labelledby="fileErrorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileErrorModalLabel">Error de archivo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Por favor, sube un archivo en formato .jpeg/.jpg o .png.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </html>
