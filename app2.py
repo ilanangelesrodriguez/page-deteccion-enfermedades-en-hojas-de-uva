@@ -25,7 +25,12 @@ def predict():
 
         # Guardar el archivo en una carpeta temporal
         basepath = os.path.dirname(__file__)
-        file_path = os.path.join(basepath, 'static', 'uploads', file.filename)
+        upload_path = os.path.join(basepath, 'static', 'uploads')
+        # Crear la carpeta uploads si no existe
+        if not os.path.exists(upload_path):
+            os.makedirs(upload_path)
+
+        file_path = os.path.join(upload_path, file.filename)
         file.save(file_path)
 
         # Preprocesar la imagen para el modelo
