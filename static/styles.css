@@ -58,14 +58,26 @@ button:hover {
 }
 
 .form__result {
-    font-size: 1.2em !important;
+    font-size: 20px !important;
     font-weight: 700;
 }
 
 .form__result-text {
-    font-weight: 500;
-    font-size: 1em
+    font-weight: 500 !important;
+    font-size: 18px !important;
+    margin-bottom: 0.5em !important;
 }
+
+.form__result-ul {
+    list-style: none;
+    padding: 0;
+}
+
+.form__result-ul li {
+    margin-bottom: 0.5em;
+    font-size: 18px !important;
+}
+
 
 .input-div {
     position: relative;
