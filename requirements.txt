@@ -6,4 +6,7 @@ Werkzeug==3.0.3
 numpy
 tensorflow
 Pillow
+<<<<<<< HEAD
 psycopg2-binary
+=======
+>>>>>>> origin/develop
