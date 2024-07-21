@@ -13,7 +13,7 @@ body {
 .container {
     text-align: center;
     background: #fff;
-    width: 90vw !important;
+    width: 95vw !important;
     padding: 3em 1em;
     border-radius: 8px;
     box-shadow: -9px 9px 18px #5a5a5a,
@@ -60,6 +60,10 @@ button:hover {
 .form__result {
     font-size: 20px !important;
     font-weight: 700;
+}
+
+.form__result-img {
+    width: 9em;
 }
 
 .form__result-text {
