@@ -144,6 +144,11 @@ footer p {
   transform: scale(1.1);
 }
 
+.credits__description {
+  padding-left: 2.5em !important;
+  padding-right: 2.5em !important;
+  padding-bottom: 2.5em !important;
+}
 
 .credits__description p {
   text-align: justify;
