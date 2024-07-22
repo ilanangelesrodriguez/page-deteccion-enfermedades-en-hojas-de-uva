@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, Response
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image as keras_image
@@ -31,83 +31,75 @@ def index():
     prediction = session.get('prediction')
     confidence = session.get('confidence')
     probabilities = session.get('probabilities')
-    uploaded_image = session.get('uploaded_image')
+    uploaded_image_id = session.get('uploaded_image_id')
 
     # Limpiar la información de la sesión
     session.pop('prediction', None)
     session.pop('confidence', None)
     session.pop('probabilities', None)
-    session.pop('uploaded_image', None)
+    session.pop('uploaded_image_id', None)
 
     return render_template('index.html', 
                            prediction=prediction, 
                            confidence=confidence,
                            probabilities=probabilities,
-                           uploaded_image=uploaded_image,
+                           uploaded_image_id=uploaded_image_id,
                            labels=labels)
 
 
 def save_image_to_db(filename, image_data):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('INSERT INTO images (filename, image) VALUES (%s, %s)', (filename, psycopg2.Binary(image_data)))
+    cur.execute('INSERT INTO images (filename, image) VALUES (%s, %s) RETURNING id', (filename, psycopg2.Binary(image_data)))
+    image_id = cur.fetchone()[0]
     conn.commit()
     cur.close()
     conn.close()
+    return image_id
+
 
 
 @app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
-        # Obtener el archivo de la solicitud
         file = request.files['file']
-
-        # Leer el archivo en un buffer
         image_data = file.read()
+        image_id = save_image_to_db(file.filename, image_data)
 
-        # Guardar la imagen en la base de datos
-        save_image_to_db(file.filename, image_data)
-
-        # Preprocesar la imagen para el modelo
-        img = keras_image.load_img(io.BytesIO(image_data), target_size=(224, 224))  # Ajustar el tamaño según el modelo
+        img = keras_image.load_img(io.BytesIO(image_data), target_size=(224, 224))
         img_array = keras_image.img_to_array(img)
-        img_array = np.expand_dims(img_array, axis=0)  # Añadir una dimensión para el batch
+        img_array = np.expand_dims(img_array, axis=0)
 
-        # Hacer una predicción
         prediction = model.predict(img_array)
-        result = np.argmax(prediction, axis=1)[0]  # Obtener la clase predicha
+        result = np.argmax(prediction, axis=1)[0]
 
-        # Mapear la clase predicha a una etiqueta de enfermedad
         prediction_label = labels.get(result, "Etiqueta desconocida")
+        prediction_confidence = float(np.max(prediction))
+        prediction_probabilities = prediction[0].tolist()
 
-        # Detalles adicionales de la predicción
-        prediction_confidence = np.max(prediction)  # Confianza de la predicción
-        prediction_probabilities = prediction[0]  # Probabilidades de todas las clases
-
-        # Convertir a tipos JSON serializables
-        prediction_confidence = float(prediction_confidence)
-        prediction_probabilities = prediction_probabilities.tolist()  # Convertir a lista de float
-
-        # Guardar la información en la sesión
         session['prediction'] = prediction_label
         session['confidence'] = prediction_confidence
         session['probabilities'] = prediction_probabilities
-        session['uploaded_image'] = file.filename
+        session['uploaded_image_id'] = image_id
 
-        # Redirigir a la ruta principal
         return redirect(url_for('index'))
 
     return None
+
 
 @app.route('/image/<int:image_id>')
 def image(image_id):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT image FROM images WHERE id=%s', (image_id,))
+    cur.execute('SELECT image FROM images WHERE id = %s', (image_id,))
     image_data = cur.fetchone()[0]
     cur.close()
     conn.close()
-    return Response(image_data, mimetype='image/jpeg')
+
+    if image_data is None:
+        return "Image not found", 404
+
+    return Response(image_data, mimetype='image/jpeg')  # Ajustar el mime type según el formato de la imagen
 
 
 if __name__ == '__main__':
