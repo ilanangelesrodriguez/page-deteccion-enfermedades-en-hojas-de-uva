@@ -40,7 +40,12 @@ def index():
     session.pop('uploaded_image_id', None)
 
     # Enumerar las probabilidades
-    enumerated_probabilities = [(prob, index) for index, prob in enumerate(probabilities)]
+    if probabilities is not None:
+        enumerated_probabilities = [(prob, index) for index, prob in enumerate(probabilities)]
+    else:
+        # Manejar el caso en que `probabilities` es `None`
+        enumerated_probabilities = []
+        print("Error: `probabilities` es None.")
 
     return render_template('index.html',
                            prediction=prediction,
