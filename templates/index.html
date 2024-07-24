@@ -63,11 +63,12 @@
                         <div class="mt-3 form__result">
                             Probabilidades por Clase:
                             <ul class="mb-3 form__result-ul form__result-text">
-                                {% for prob in probabilities %}
-                                    <li>Clase {{ loop.index0 }}: {{ prob | round(4) * 100 }}%</li>
+                                {% for prob, index in probabilities %}
+                                    <li>{{ labels[index] }}: {{ prob | round(4) * 100 }}%</li>
                                 {% endfor %}
                             </ul>
                         </div>
+                        
                     </div>
 
                 </div>

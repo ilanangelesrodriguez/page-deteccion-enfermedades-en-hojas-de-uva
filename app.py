@@ -39,10 +39,13 @@ def index():
     session.pop('probabilities', None)
     session.pop('uploaded_image_id', None)
 
-    return render_template('index.html', 
-                           prediction=prediction, 
+    # Enumerar las probabilidades
+    enumerated_probabilities = [(prob, index) for index, prob in enumerate(probabilities)]
+
+    return render_template('index.html',
+                           prediction=prediction,
                            confidence=confidence,
-                           probabilities=probabilities,
+                           probabilities=enumerated_probabilities,
                            uploaded_image_id=uploaded_image_id,
                            labels=labels)
 
